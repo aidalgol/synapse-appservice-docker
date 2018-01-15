@@ -1,0 +1,3 @@
+# Ignore Synapse keys
+*.tls.*
+*.key
