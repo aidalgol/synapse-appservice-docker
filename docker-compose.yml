@@ -1,0 +1,21 @@
+version: "2"
+services:
+  synapse:
+    image: synapse:dev
+    build:
+      context: synapse
+    ports:
+      - "8008:8008"
+    volumes:
+      - ${SYNAPSE_VAR_LIB_PATH}:/var/lib/matrix-synapse
+      - ${SYNAPSE_CONFIG_PATH}:/etc/matrix-synapse:ro
+      - ${APPSERVICE_REG_PATH}:/etc/synapse-appservice-registrations:ro
+
+  appservice-irc:
+    image: matrix-appservice-irc:dev
+    build:
+      context: irc-bridge
+    volumes:
+      - ${IRC_BRIDGE_VARLIB_PATH}:/var/lib/matrix-appservice-irc
+      - ${IRC_BRIDGE_CONFIG_PATH}:/etc/matrix-appservice-irc:ro
+      - ${APPSERVICE_REG_PATH}:/etc/synapse-appservice-registrations

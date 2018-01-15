@@ -1,0 +1,181 @@
+# Configuration specific to AS registration. Unless other marked, all fields
+# are *REQUIRED*.
+homeserver:
+  # The URL to the home server for client-server API calls, also used to form the
+  # media URLs as displayed in bridged IRC channels:
+  url: "http://synapse:8008"
+
+  # Drop Matrix messages which are older than this number of seconds, according to
+  # the event's origin_server_ts.
+  # If the bridge is down for a while, the homeserver will attempt to send all missed
+  # events on reconnection. These events may be hours old, which can be confusing to
+  # IRC users if they are then bridged. This option allows these old messages to be
+  # dropped.
+  # CAUTION: This is a very coarse heuristic. Federated homeservers may have different
+  # clock times and hence produce different origin_server_ts values, which may be old
+  # enough to cause *all* events from the homeserver to be dropped.
+  # Default: 0 (don't ever drop)
+  # dropMatrixMessagesAfterSecs: 300 # 5 minutes
+
+  # The 'domain' part for user IDs on this home server. Usually (but not always)
+  # is the "domain name" part of the HS URL.
+  domain: "synapse"
+
+# Configuration specific to the IRC service
+ircService:
+  servers:
+    # The address of the server to connect to.
+    chat.freenode.net:
+      name: "freenode"
+      port: 7000
+      ssl: true
+      sendConnectionMessages: true
+
+      modePowerMap:
+        o: 50
+
+      botConfig:
+        # Enable the presence of the bot in IRC channels. The bot serves as the entity
+        # which maps from IRC -> Matrix. You can disable the bot entirely which
+        # means IRC -> Matrix chat will be shared by active "M-Nick" connections
+        # in the room. If there are no users in the room (or if there are users
+        # but their connections are not on IRC) then nothing will be bridged to
+        # Matrix. If you're concerned about the bot being treated as a "logger"
+        # entity, then you may want to disable the bot. If you want IRC->Matrix
+        # but don't want to have TCP connections to IRC unless a Matrix user speaks
+        # (because your client connection limit is low), then you may want to keep
+        # the bot enabled. Default: true.
+        # NB: If the bot is disabled, you SHOULD have matrix-to-IRC syncing turned
+        #     on, else there will be no users and no bot in a channel (meaning no
+        #     messages to Matrix!) until a Matrix user speaks which makes a client
+        #     join the target IRC channel.
+        # NBB: The bridge bot IRC client will still join the target IRC network so
+        #      it can service bridge-specific queries from the IRC-side e.g. so
+        #      real IRC clients have a way to change their Matrix display name.
+        #      See https://github.com/matrix-org/matrix-appservice-irc/issues/55
+        enabled: true
+        nick: "MatrixBot-dev"
+        joinChannelsIfNoUsers: false
+
+      privateMessages:
+        enabled: true
+        federate: false
+
+      dynamicChannels:
+        enabled: true
+        createAlias: true
+        published: false
+        joinRule: public
+        federate: false
+        aliasTemplate: "#freenode_$CHANNEL"
+
+      membershipLists:
+        enabled: true
+        floodDelayMs: 10000
+
+        global:
+          ircToMatrix:
+            initial: true
+            incremental: true
+
+          matrixToIrc:
+            initial: true
+            incremental: true
+
+      matrixClients:
+        userTemplate: "@freenode_$NICK"
+        displayName: "$NICK (IRC)"
+
+      ircClients:
+        nickTemplate: "$DISPLAY[m]"
+        allowNickChanges: true
+        maxClients: 30
+        ipv6:
+          only: false
+        reconnectIntervalMs: 5000
+        lineLimit: 3
+        userModes: "Ri"
+
+  # Configuration for an ident server. If you are running a public bridge it is
+  # advised you setup an ident server so IRC mods can ban specific matrix users
+  # rather than the application service itself.
+  ident:
+    # True to listen for Ident requests and respond with the
+    # matrix user's user_id (converted to ASCII, respecting RFC 1413).
+    # Default: false.
+    enabled: false
+    # The port to listen on for incoming ident requests.
+    # Ports below 1024 require root to listen on, and you may not want this to
+    # run as root. Instead, you can get something like an Apache to yank up
+    # incoming requests to 113 to a high numbered port. Set the port to listen
+    # on instead of 113 here.
+    # Default: 113.
+    port: 1113
+    # The address to listen on for incoming ident requests.
+    # Default: 0.0.0.0
+    address: "::"
+
+  # Configuration for logging. Optional. Default: console debug level logging
+  # only.
+  logging:
+    # Level to log on console/logfile. One of error|warn|info|debug
+    level: "debug"
+    # The file location to log to. This is relative to the project directory.
+    logfile: "/var/lib/matrix-appservice-irc/debug.log"
+    # The file location to log errors to. This is relative to the project
+    # directory.
+    errfile: "/var/lib/matrix-appservice-irc/errors.log"
+    # Whether to log to the console or not.
+    toConsole: true
+    # The max number of files to keep. Files will be overwritten eventually due
+    # to rotations.
+    maxFiles: 5
+
+  # The nedb database URI to connect to. This is the name of the directory to
+  # dump .db files to. This is relative to the project directory.
+  # Required.
+  databaseUri: "nedb:///var/lib/matrix-appservice-irc/db"
+
+  # Configuration options for the debug HTTP API. To access this API, you must
+  # append ?access_token=$APPSERVICE_TOKEN (from the registration file) to the requests.
+  #
+  # The debug API exposes the following endpoints:
+  #
+  #   GET /irc/$domain/user/$user_id => Return internal state for the IRC client for this user ID.
+  #
+  #   POST /irc/$domain/user/$user_id => Issue a raw IRC command down this connection.
+  #                                      Format: new line delimited commands as per IRC protocol.
+  #
+  debugApi:
+    # True to enable the HTTP API endpoint. Default: false.
+    enabled: false
+    # The port to host the HTTP API.
+    port: 11100
+
+  # Configuration for the provisioning API.
+  #
+  # GET /_matrix/provision/link
+  # GET /_matrix/provision/unlink
+  # GET /_matrix/provision/listlinks
+  #
+  provisioning:
+    # True to enable the provisioning HTTP endpoint. Default: false.
+    enabled: false
+    # The number of seconds to wait before giving up on getting a response from
+    # an IRC channel operator. If the channel operator does not respond within the
+    # allotted time period, the provisioning request will fail.
+    # Default: 300 seconds (5 mins)
+    requestTimeoutSeconds: 300
+
+  # WARNING: The bridge needs to send plaintext passwords to the IRC server, it cannot
+  # send a password hash. As a result, passwords (NOT hashes) are stored encrypted in
+  # the database.
+  #
+  # To generate a .pem file:
+  # $ openssl genpkey -out passkey.pem -outform PEM -algorithm RSA -pkeyopt rsa_keygen_bits:2048
+  #
+  # The path to the RSA PEM-formatted private key to use when encrypting IRC passwords
+  # for storage in the database. Passwords are stored by using the admin room command
+  # `!storepass server.name passw0rd. When a connection is made to IRC on behalf of
+  # the Matrix user, this password will be sent as the server password (PASS command).
+  passwordEncryptionKeyPath: "/var/lib/matrix-appservice-irc/passkey.pem"
