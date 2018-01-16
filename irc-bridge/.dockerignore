@@ -1,0 +1,13 @@
+matrix-appservice-irc/.git*
+matrix-appservice-irc/*.md
+matrix-appservice-irc/*.yaml
+matrix-appservice-irc/.*.yaml
+matrix-appservice-irc/*.yml
+matrix-appservice-irc/.*.yml
+matrix-appservice-irc/lib
+matrix-appservice-irc/scripts
+matrix-appservice-irc/spec
+matrix-appservice-irc/node_modules
+matrix-appservice-irc/npm-debug.log
+config
+varlib

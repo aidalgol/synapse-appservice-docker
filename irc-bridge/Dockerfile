@@ -1,11 +1,12 @@
 FROM node:6
 
-ENV appdir /usr/local/src/matrix-appservice-irc/
+RUN mkdir /usr/local/src/matrix-appservice-irc
+COPY matrix-appservice-irc/package.json /usr/local/src/matrix-appservice-irc/
+RUN cd /usr/local/src/matrix-appservice-irc && npm install
 
-COPY matrix-appservice-irc ${appdir}
-WORKDIR ${appdir}
-RUN npm install
+COPY matrix-appservice-irc /usr/local/src/
 
+WORKDIR /usr/local/src/matrix-appservice-irc
 CMD ["node", "app.js", \
      "--port", "9009", \
      "--config", "/etc/matrix-appservice-irc/config.yaml", \
