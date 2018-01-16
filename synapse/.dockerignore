@@ -1,0 +1,16 @@
+synapse/.git*
+synapse/.jenkins
+synapse/.trafix.yml
+synapse/build
+synapse/contrib
+synapse/demo
+synapse/dist
+synapse/docs
+synapse/tests
+synapse/*.rst
+synapse/*.sh
+synapse/LICENSE
+synapse/pylint.cfg
+synapse/tox.ini
+config
+varlib
