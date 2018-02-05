@@ -15,6 +15,8 @@ services:
     image: matrix-appservice-irc:dev
     build:
       context: irc-bridge
+    ports:
+      - "9229:9229"
     volumes:
       - ${IRC_BRIDGE_VARLIB_PATH}:/var/lib/matrix-appservice-irc
       - ${IRC_BRIDGE_CONFIG_PATH}:/etc/matrix-appservice-irc:ro
