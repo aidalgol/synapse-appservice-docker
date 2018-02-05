@@ -8,6 +8,7 @@ synapse/dist
 synapse/docs
 synapse/tests
 synapse/*.rst
+!synapse/README.rst
 synapse/*.sh
 synapse/LICENSE
 synapse/pylint.cfg
