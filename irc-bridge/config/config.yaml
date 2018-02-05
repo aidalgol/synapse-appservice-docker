@@ -138,7 +138,7 @@ ircService:
         published: false
         joinRule: public
         federate: false
-        aliasTemplate: "#OFTC_$CHANNEL"
+        aliasTemplate: "#oftc_$CHANNEL"
 
       membershipLists:
         enabled: true
