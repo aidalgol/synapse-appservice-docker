@@ -15,6 +15,14 @@ Build the Docker images::
 
   $ docker-compose build
 
+Generate keys::
+  $ openssl genpkey -out irc-bridge/varlib/passkey.pem -outform PEM -algorithm RSA -pkeyopt rsa_keygen_bits:2048
+  $ docker-compose run synapse python -m synapse.app.homeserver \
+    -c /etc/matrix-synapse/homeserver.yaml \
+    --generate-config \
+    --report-stats=no \
+    --server-name synapse
+
 Register a Matrix user::
 
   $ docker up synapse # Run in a separate terminal

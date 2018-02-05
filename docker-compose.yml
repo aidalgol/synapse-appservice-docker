@@ -8,7 +8,7 @@ services:
       - "8008:8008"
     volumes:
       - ${SYNAPSE_VAR_LIB_PATH}:/var/lib/matrix-synapse
-      - ${SYNAPSE_CONFIG_PATH}:/etc/matrix-synapse:ro
+      - ${SYNAPSE_CONFIG_PATH}:/etc/matrix-synapse
       - ${APPSERVICE_REG_PATH}:/etc/synapse-appservice-registrations:ro
 
   appservice-irc:
