@@ -1,9 +1,7 @@
 FROM python:2.7
 
-ENV appdir /usr/local/src/synapse/
-
-COPY synapse ${appdir}
-WORKDIR ${appdir}
+COPY synapse /opt/app/
+WORKDIR /opt/app/
 ENV MAKEFLAGS="-j"
 RUN ./setup.py install
 
