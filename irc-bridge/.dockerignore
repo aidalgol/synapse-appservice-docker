@@ -4,8 +4,8 @@ matrix-appservice-irc/*.yaml
 matrix-appservice-irc/.*.yaml
 matrix-appservice-irc/*.yml
 matrix-appservice-irc/.*.yml
-matrix-appservice-irc/lib
 matrix-appservice-irc/scripts
+matrix-appservice-irc/hooks
 matrix-appservice-irc/spec
 matrix-appservice-irc/node_modules
 matrix-appservice-irc/npm-debug.log
