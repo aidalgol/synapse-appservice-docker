@@ -23,16 +23,6 @@ Generate keys::
     --report-stats=no \
     --server-name synapse
 
-Register a Matrix user::
-
-  $ docker up synapse # Run in a separate terminal
-  $ docker-compose run synapse \
-    register_new_matrix_user \
-    -c /etc/matrix-synapse/homeserver.yaml \
-    https://synapse:8448
-
-Follow the prompts and then interrupt (`Ctrl+C`) the `docker up` process.
-
 Generate the appservice registration file for the IRC bridge [1]_::
 
   $ docker-compose run appservice-irc ./bin/matrix-appservice-irc \
@@ -41,6 +31,16 @@ Generate the appservice registration file for the IRC bridge [1]_::
     --localpart appservice-irc \
     --config /etc/matrix-appservice-irc/config.yaml \
     --file /etc/synapse-appservice-registrations/irc.yaml
+
+Register a Matrix user::
+
+  $ docker up synapse # Run in a separate terminal
+  $ docker-compose run synapse \
+    register_new_matrix_user \
+    -c /etc/matrix-synapse/homeserver.yaml \
+    http://synapse:8008
+
+Follow the prompts and then interrupt (`Ctrl+C`) the `docker up` process.
 
 Start the Docker Compose services (you may want to do this in a separate terminal)::
 
